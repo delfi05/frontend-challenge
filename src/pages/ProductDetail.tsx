@@ -168,13 +168,19 @@ const ProductDetail = () => {
                   <input 
                     type="number" 
                     value={quantity} 
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value) || 1;
+                      const maxValue = product.stock || 10000;
+                      setQuantity(Math.min(Math.max(1, newValue), maxValue));
+                    }}
                     className="quantity-input"
                     min="1"
+                    max={product.stock || 10000}
                   />
                   <button 
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(quantity + 1, product.stock || 10000))}
                     className="quantity-btn"
+                    disabled={quantity >= (product.stock || 10000)}
                   >
                     <span className="material-icons">add</span>
                   </button>

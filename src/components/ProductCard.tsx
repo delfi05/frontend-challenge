@@ -15,20 +15,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
       case 'inactive':
         return <span className="status-badge status-inactive l1">No disponible</span>
       case 'pending':
-        // Handle pending status
-        return <span className="status-badge status-active l1">Disponible</span>
+        return <span className="status-badge status-pending l1">Pendiente</span>
       default:
-        return null
+        return <span className="status-badge status-inactive l1">No disponible</span>
     }
   }
 
   // Format price for display
   const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}` // Missing currency and proper formatting
+    return `$${price.toLocaleString('es-CL')}` // Formato chileno (CLP)
   }
 
   // Check stock availability
-  const getStockStatus = (stock: number) => {
+  const getStockStatus = (stock: number, status: string) => {
+    // Si el producto está pendiente, mostrar pendiente en lugar del stock
+    if (status === 'pending') {
+      return <span className="stock-status pending-stock l1">Pendiente</span>
+    }
+    
     if (stock === 0) {
       return <span className="stock-status out-of-stock l1">Sin stock</span>
     } else if (stock < 10) {
@@ -75,7 +79,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <span className="l1">{product.category}</span>
             </div>
             
-            {getStockStatus(product.stock)}
+            {getStockStatus(product.stock, product.status)}
           </div>
 
           {/* Features - Bug: displays all features without limit */}

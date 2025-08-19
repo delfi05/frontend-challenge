@@ -145,6 +145,11 @@
   color: #991b1b;
 }
 
+.pending-stock {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 /* Features */
 .product-features {
   display: flex;

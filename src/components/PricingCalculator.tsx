@@ -16,15 +16,29 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
       return product.basePrice * qty
     }
 
-    // Find applicable price break
-    let applicableBreak = product.priceBreaks[0]
+    // Find the best price break for the quantity
+    let bestTotalPrice = product.basePrice * qty;
+    let bestBreakIndex = -1;
+    
     for (let i = 0; i < product.priceBreaks.length; i++) {
-      if (qty >= product.priceBreaks[i].minQty) {
-        applicableBreak = product.priceBreaks[i]
+      const breakPrice = product.priceBreaks[i].price;
+      const minQty = product.priceBreaks[i].minQty;
+      
+      if (qty >= minQty) {
+        const totalPrice = breakPrice * qty;
+        if (totalPrice < bestTotalPrice) {
+          bestTotalPrice = totalPrice;
+          bestBreakIndex = i;
+        }
       }
     }
-
-    return applicableBreak.price * qty
+    
+    if (bestBreakIndex !== -1) {
+      setSelectedBreak(bestBreakIndex);
+      return bestTotalPrice;
+    }
+    
+    return product.basePrice * qty;
   }
 
   // Calculate discount amount
@@ -42,7 +56,7 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
 
   // Format price display
   const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}` // Should be CLP formatting
+    return `$${price.toLocaleString('es-CL')}` // Formato chileno (CLP)
   }
 
   const currentPrice = calculatePrice(quantity)
@@ -65,10 +79,14 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
             <input
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={(e) => {
+                const newValue = parseInt(e.target.value) || 1;
+                const maxValue = product.stock || 10000;
+                setQuantity(Math.min(Math.max(1, newValue), maxValue));
+              }}
               className="quantity-input p1"
               min="1"
-              max="10000"
+              max={product.stock || 10000}
             />
             <span className="quantity-unit l1">unidades</span>
           </div>

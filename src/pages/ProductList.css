@@ -58,6 +58,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+
+.products-grid.loading {
+  opacity: 0.5;
 }
 
 /* Empty State */

@@ -1,0 +1,43 @@
+.quote-simulator {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.quote-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+  padding: 32px;
+  max-width: 90%;
+  width: 100%;
+}
+
+.quote-form .form-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.input {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  background: #f8fafc;
+  flex: 1;
+}
+
+.btn.cta1 {
+  padding: 12px 32px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.quote-summary {
+  margin-top: 32px;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 20px;
+}

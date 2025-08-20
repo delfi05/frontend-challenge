@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Product } from '../types/Product'
 import './PricingCalculator.css'
+import { useNavigate } from 'react-router-dom'
 
 interface PricingCalculatorProps {
   product: Product
@@ -9,6 +10,7 @@ interface PricingCalculatorProps {
 const PricingCalculator = ({ product }: PricingCalculatorProps) => {
   const [quantity, setQuantity] = useState<number>(1)
   const [selectedBreak, setSelectedBreak] = useState<number>(0)
+  const navigate = useNavigate()
 
   // Calculate best pricing for quantity
   const calculatePrice = (qty: number) => {
@@ -18,7 +20,6 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
 
     // Find the best price break for the quantity
     let bestTotalPrice = product.basePrice * qty;
-    let bestBreakIndex = -1;
     
     for (let i = 0; i < product.priceBreaks.length; i++) {
       const breakPrice = product.priceBreaks[i].price;
@@ -28,17 +29,10 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
         const totalPrice = breakPrice * qty;
         if (totalPrice < bestTotalPrice) {
           bestTotalPrice = totalPrice;
-          bestBreakIndex = i;
         }
       }
     }
-    
-    if (bestBreakIndex !== -1) {
-      setSelectedBreak(bestBreakIndex);
-      return bestTotalPrice;
-    }
-    
-    return product.basePrice * qty;
+    return bestTotalPrice;
   }
 
   // Calculate discount amount
@@ -98,17 +92,17 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
             <h4 className="breaks-title p1-medium">Descuentos por volumen</h4>
             <div className="price-breaks">
               {product.priceBreaks.map((priceBreak, index) => {
-                const isActive = quantity >= priceBreak.minQty
-                const isSelected = selectedBreak === index
-                
+                const isSelected = quantity === priceBreak.minQty
+
                 return (
                   <div 
                     key={index}
-                    className={`price-break ${isActive ? 'active' : ''} ${isSelected ? 'selected' : ''}`}
+                    className={`price-break ${isSelected ? 'selected' : ''}`}
                     onClick={() => {
-                      setSelectedBreak(index)
                       setQuantity(priceBreak.minQty)
+                      setSelectedBreak(index)
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     <div className="break-quantity l1">
                       {priceBreak.minQty}+ unidades
@@ -162,15 +156,12 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
         {/* Actions */}
         <div className="calculator-actions">
           <button 
-            className="btn btn-secondary cta1"
-            onClick={() => {
-              // Handle quote request
-              alert(`Cotización solicitada para ${quantity} unidades de ${product.name}`)
-            }}
-          >
-            <span className="material-icons">email</span>
-            Solicitar cotización oficial
-          </button>
+        className="btn btn-secondary cta1"
+        onClick={() => navigate('/cotizar')}
+      >
+        <span className="material-icons">email</span>
+        Solicitar cotización oficial
+      </button>
           
           <button 
             className="btn btn-primary cta1"

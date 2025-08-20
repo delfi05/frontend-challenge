@@ -4,6 +4,8 @@ import { products } from '../data/products'
 import { Product } from '../types/Product'
 import PricingCalculator from '../components/PricingCalculator'
 import './ProductDetail.css'
+import { useCart } from '../context/CartContext'
+import { useNavigate } from 'react-router-dom'
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -11,6 +13,8 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState<number>(1)
+  const { addToCart } = useCart()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (id) {
@@ -188,10 +192,15 @@ const ProductDetail = () => {
               </div>
 
               <div className="action-buttons">
-                <button 
+                <button
                   className={`btn btn-primary cta1 ${!canAddToCart ? 'disabled' : ''}`}
                   disabled={!canAddToCart}
-                  onClick={() => alert('Función de agregar al carrito por implementar')}
+                  onClick={() => addToCart({
+                    product,
+                    quantity,
+                    color: selectedColor,
+                    size: selectedSize
+                  })}
                 >
                   <span className="material-icons">shopping_cart</span>
                   {canAddToCart ? 'Agregar al carrito' : 'No disponible'}
@@ -199,7 +208,7 @@ const ProductDetail = () => {
                 
                 <button 
                   className="btn btn-secondary cta1"
-                  onClick={() => alert('Función de cotización por implementar')}
+                  onClick={() => navigate('/cotizar')}
                 >
                   <span className="material-icons">calculate</span>
                   Solicitar cotización

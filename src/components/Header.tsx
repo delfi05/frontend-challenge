@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import './Header.css'
+import { useCart } from '../context/CartContext'
 
 const Header = () => {
+  const { cartCount } = useCart()
   return (
     <header className="header">
       <div className="container">
@@ -20,10 +22,13 @@ const Header = () => {
               <span className="material-icons">home</span>
               Catálogo
             </Link>
-            <button className="nav-link l1" onClick={() => alert('Función de carrito por implementar')}>
+           <Link to="/cart" className="nav-link l1">
+            <div>
               <span className="material-icons">shopping_cart</span>
-              Carrito (0)
-            </button>
+              <span className="header-cart">Carrito</span>
+              <span className="cart-count" >{cartCount}</span>
+            </div>
+          </Link>
           </nav>
 
           {/* Actions */}

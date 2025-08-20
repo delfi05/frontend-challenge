@@ -1,22 +1,38 @@
-import { categories, suppliers } from '../data/products'
+import { categories, products } from '../data/products'
 import './ProductFilters.css'
+
+const suppliers = Array.from(new Set(products.map(p => p.supplier)))
 
 interface ProductFiltersProps {
   selectedCategory: string
   searchQuery: string
   sortBy: string
+  selectedSupplier: string
+  minPrice: string
+  maxPrice: string
   onCategoryChange: (category: string) => void
   onSearchChange: (search: string) => void
   onSortChange: (sort: string) => void
+  onSupplierChange: (supplier: string) => void
+  onMinPriceChange: (min: string) => void
+  onMaxPriceChange: (max: string) => void
+  onClearFilters: () => void
 }
 
 const ProductFilters = ({
   selectedCategory,
   searchQuery,
   sortBy,
+  selectedSupplier,
+  minPrice,
+  maxPrice,
   onCategoryChange,
   onSearchChange,
-  onSortChange
+  onSortChange,
+  onSupplierChange,
+  onMinPriceChange,
+  onMaxPriceChange,
+  onClearFilters
 }: ProductFiltersProps) => {
   return (
     <div className="product-filters">
@@ -75,17 +91,46 @@ const ProductFilters = ({
           </select>
         </div>
 
-        {/* Quick Stats - Bug: hardcoded values instead of dynamic */}
+        {/* Supplier Filter */}
         <div className="filter-section">
-          <h3 className="filter-title p1-medium">Proveedores</h3>
-          <div className="supplier-list">
+          <h3 className="filter-title p1-medium">Proveedor</h3>
+          <select
+            value={selectedSupplier}
+            onChange={e => onSupplierChange(e.target.value)}
+            className="supplier-select p1"
+          >
+            <option value="">Todos los proveedores</option>
             {suppliers.map(supplier => (
-              <div key={supplier.id} className="supplier-item">
-                <span className="supplier-name l1">{supplier.name}</span>
-                <span className="supplier-count l1">{supplier.products}</span>
-              </div>
+              <option key={supplier} value={supplier}>{supplier}</option>
             ))}
-          </div>
+          </select>
+        </div>
+
+        {/* Price Range Filter */}
+        <div className="filter-section">
+          <h3 className="filter-title p1-medium">Rango de precios</h3>
+          <input
+            type="number"
+            placeholder="Precio mínimo"
+            value={minPrice}
+            style={{ marginRight: '8px' }}
+            onChange={e => onMinPriceChange(e.target.value)}
+            className="price-input p1"
+          />
+          <input
+            type="number"
+            placeholder="Precio máximo"
+            value={maxPrice}
+            onChange={e => onMaxPriceChange(e.target.value)}
+            className="price-input p1"
+          />
+        </div>
+
+        {/* Limpiar filtros */}
+        <div className="filter-section">
+          <button className="btn btn-secondary" onClick={onClearFilters}>
+            Limpiar filtros
+          </button>
         </div>
       </div>
     </div>
